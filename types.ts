@@ -49,5 +49,6 @@ export interface ChecklistConfigItem {
 
 export interface AppConfig {
   busChecklist: ChecklistConfigItem[];
-  tramChecklist: ChecklistConfigItem[];
+  tramChecklist: ChecklistConfigItem[]; // Para Remodelados/Clássicos
+  tramArticulatedChecklist: ChecklistConfigItem[]; // Nova lista específica para Articulados
 }

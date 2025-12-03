@@ -1,5 +1,7 @@
+
+
 import React, { useState, useEffect } from 'react';
-import { Vehicle, ChecklistItemResult, InspectionStatus, AppConfig, InspectionRecord, VehicleType } from '../types';
+import { Vehicle, ChecklistItemResult, InspectionStatus, AppConfig, InspectionRecord, VehicleType, ChecklistConfigItem } from '../types';
 import { getVehicleByFleet, saveInspection, getConfig, generateUUID } from '../services/dataService';
 import { Search, CheckCircle, Save, Loader2, ArrowLeft } from 'lucide-react';
 
@@ -45,8 +47,19 @@ export const InspectionForm: React.FC<Props> = ({ onCancel, onSuccess }) => {
 
   const initializeChecklist = (type: VehicleType) => {
     if (!config) return;
-    // Se for Autocarro usa a lista de Bus, caso contrário (qualquer tipo de Elétrico) usa a lista de Tram
-    const items = type === VehicleType.BUS ? config.busChecklist : config.tramChecklist;
+    
+    let items: ChecklistConfigItem[] = [];
+
+    if (type === VehicleType.BUS) {
+        items = config.busChecklist;
+    } else if (type === VehicleType.TRAM_ARTICULADO) {
+        // Se a lista articulada não existir na DB (dados antigos), usa a de elétrico normal como fallback
+        items = config.tramArticulatedChecklist || config.tramChecklist;
+    } else {
+        // TRAM_REMODELADO
+        items = config.tramChecklist;
+    }
+
     const initialResults: ChecklistItemResult[] = items.map(item => ({
       id: item.id,
       category: item.category,

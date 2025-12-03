@@ -30,5 +30,14 @@ export const DEFAULT_CONFIG: AppConfig = {
     { id: 't4', category: 'Exterior', label: 'Luzes e Sinalização', description: 'Faróis, piscas e luzes de presença.' },
     { id: 't5', category: 'Interior', label: 'Limpeza e Bancos', description: 'Estado dos estofos e limpeza do chão.' },
     { id: 't6', category: 'Mecânica', label: 'Rodados', description: 'Verificar ruídos visuais ou desgaste excessivo.' },
+  ],
+  tramArticulatedChecklist: [
+    { id: 'ta1', category: 'Mecânica', label: 'Articulação / Fole', description: 'Verificar integridade da lona do fole e plataforma giratória.' },
+    { id: 'ta2', category: 'Mecânica', label: 'Pantógrafo', description: 'Verificar subida/descida e estado da régua.' },
+    { id: 'ta3', category: 'Segurança', label: 'Travão de Via', description: 'Teste aos patins dos 3 bogies.' },
+    { id: 'ta4', category: 'Segurança', label: 'Areneiros', description: 'Confirmar nível de areia.' },
+    { id: 'ta5', category: 'Exterior', label: 'Luzes e Piscas', description: 'Verificar todas as luzes exteriores.' },
+    { id: 'ta6', category: 'Interior', label: 'Sistema de Portas', description: 'Testar abertura/fecho e sensor de segurança.' },
+    { id: 'ta7', category: 'Interior', label: 'Limpeza Geral', description: 'Chão, varões e bancos.' },
   ]
 };
