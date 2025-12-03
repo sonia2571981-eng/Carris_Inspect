@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { AppConfig, ChecklistConfigItem } from '../types';
 import { getConfig, saveConfig, resetConfig } from '../services/dataService';
@@ -143,12 +142,12 @@ export const ChecklistManager: React.FC = () => {
       <div className="flex space-x-0 mb-6 border rounded-lg overflow-hidden bg-gray-50 p-1">
         <button onClick={() => setActiveTab('bus')} className={`flex-1 py-2 px-4 font-medium text-sm transition-all rounded-md ${activeTab === 'bus' ? 'bg-white text-yellow-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>Autocarros</button>
         <button onClick={() => setActiveTab('tram')} className={`flex-1 py-2 px-4 font-medium text-sm transition-all rounded-md ${activeTab === 'tram' ? 'bg-white text-yellow-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>Elétricos</button>
-        <button onClick={() => setActiveTab('articulated')} className={`flex-1 py-2 px-4 font-medium text-sm transition-all rounded-md ${activeTab === 'articulated' ? 'bg-white text-yellow-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>Articulados</button>
+        <button onClick={() => setActiveTab('articulated')} className={`flex-1 py-2 px-4 font-medium text-sm transition-all rounded-md ${activeTab === 'articulated' ? 'bg-white text-yellow-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>Elétricos Articulados</button>
       </div>
 
       {/* Add New Item */}
       <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
-        <h3 className="text-sm font-bold text-gray-700 mb-3">Adicionar Novo Item ({activeTab === 'bus' ? 'Autocarro' : activeTab === 'articulated' ? 'Articulado' : 'Elétrico'})</h3>
+        <h3 className="text-sm font-bold text-gray-700 mb-3">Adicionar Novo Item ({activeTab === 'bus' ? 'Autocarro' : activeTab === 'articulated' ? 'Elétrico Articulado' : 'Elétrico'})</h3>
         <div className="flex flex-col lg:flex-row gap-3 items-end">
             <div className="w-full lg:w-1/4">
                 <label className="block text-xs font-medium text-gray-500 mb-1">Categoria</label>
@@ -184,22 +183,44 @@ export const ChecklistManager: React.FC = () => {
               <tr key={item.id} className="hover:bg-gray-50">
                 {editingId === item.id && editForm ? (
                   <>
-                    <td className="px-6 py-4"><input className="w-full p-1 border rounded text-sm" value={editForm.category} list="categories" onChange={e => setEditForm({...editForm, category: e.target.value})} /></td>
-                    <td className="px-6 py-4"><input className="w-full p-1 border rounded text-sm" value={editForm.label} onChange={e => setEditForm({...editForm, label: e.target.value})} /></td>
-                    <td className="px-6 py-4"><input className="w-full p-1 border rounded text-sm" value={editForm.description || ''} onChange={e => setEditForm({...editForm, description: e.target.value})} placeholder="Instruções..." /></td>
-                    <td className="px-6 py-4 text-right flex justify-end gap-2">
-                        <button onClick={handleSaveEdit} className="text-green-600 hover:bg-green-100 p-1 rounded"><Check className="w-4 h-4"/></button>
-                        <button onClick={handleCancelEdit} className="text-gray-500 hover:bg-gray-100 p-1 rounded"><X className="w-4 h-4"/></button>
+                    <td className="px-6 py-4">
+                        <select 
+                            value={editForm.category} 
+                            onChange={(e) => setEditForm({...editForm, category: e.target.value})}
+                            className="w-full p-1 border rounded text-sm"
+                        >
+                            {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                    </td>
+                    <td className="px-6 py-4">
+                        <input 
+                            type="text" 
+                            value={editForm.label} 
+                            onChange={(e) => setEditForm({...editForm, label: e.target.value})}
+                            className="w-full p-1 border rounded text-sm"
+                        />
+                    </td>
+                    <td className="px-6 py-4">
+                        <input 
+                            type="text" 
+                            value={editForm.description || ''} 
+                            onChange={(e) => setEditForm({...editForm, description: e.target.value})}
+                            className="w-full p-1 border rounded text-sm"
+                        />
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                        <button onClick={handleSaveEdit} className="text-green-600 hover:text-green-800 mr-2"><Check className="w-5 h-5"/></button>
+                        <button onClick={handleCancelEdit} className="text-red-600 hover:text-red-800"><X className="w-5 h-5"/></button>
                     </td>
                   </>
                 ) : (
                   <>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-medium"><span className="bg-gray-100 px-2 py-1 rounded-md text-xs border border-gray-200">{item.category}</span></td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{item.label}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.category}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{item.label}</td>
                     <td className="px-6 py-4 text-sm text-gray-500 italic">{item.description}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end gap-2">
-                      <button onClick={() => handleStartEdit(item)} className="text-blue-600 hover:text-blue-900 hover:bg-blue-50 p-1 rounded"><Edit2 className="w-4 h-4" /></button>
-                      <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-900 hover:bg-red-50 p-1 rounded"><Trash2 className="w-4 h-4" /></button>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button onClick={() => handleStartEdit(item)} className="text-indigo-600 hover:text-indigo-900 mr-3"><Edit2 className="w-4 h-4"/></button>
+                      <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-900"><Trash2 className="w-4 h-4"/></button>
                     </td>
                   </>
                 )}
@@ -212,42 +233,58 @@ export const ChecklistManager: React.FC = () => {
       {/* Mobile List (Cards) */}
       <div className="md:hidden space-y-3">
         {currentList.map((item) => (
-          <div key={item.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm relative">
+           <div key={item.id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
              {editingId === item.id && editForm ? (
-                 <div className="space-y-3">
+                <div className="space-y-3">
                     <div>
                         <label className="text-xs text-gray-500">Categoria</label>
-                        <select className="w-full p-2 border rounded text-base bg-white" value={editForm.category} onChange={e => setEditForm({...editForm, category: e.target.value})}>
+                        <select 
+                            value={editForm.category} 
+                            onChange={(e) => setEditForm({...editForm, category: e.target.value})}
+                            className="w-full p-2 border rounded text-sm bg-white"
+                        >
                             {categories.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
                     <div>
                         <label className="text-xs text-gray-500">Item</label>
-                        <input className="w-full p-2 border rounded text-base" value={editForm.label} onChange={e => setEditForm({...editForm, label: e.target.value})} />
+                        <input 
+                            type="text" 
+                            value={editForm.label} 
+                            onChange={(e) => setEditForm({...editForm, label: e.target.value})}
+                            className="w-full p-2 border rounded text-sm bg-white"
+                        />
                     </div>
                     <div>
                         <label className="text-xs text-gray-500">Instruções</label>
-                        <input className="w-full p-2 border rounded text-base" value={editForm.description || ''} onChange={e => setEditForm({...editForm, description: e.target.value})} />
+                        <input 
+                            type="text" 
+                            value={editForm.description || ''} 
+                            onChange={(e) => setEditForm({...editForm, description: e.target.value})}
+                            className="w-full p-2 border rounded text-sm bg-white"
+                        />
                     </div>
-                    <div className="flex gap-2">
-                         <button onClick={handleSaveEdit} className="flex-1 bg-green-600 text-white p-2 rounded text-sm font-medium">Guardar</button>
-                         <button onClick={handleCancelEdit} className="flex-1 bg-gray-200 text-gray-700 p-2 rounded text-sm font-medium">Cancelar</button>
+                    <div className="flex gap-2 mt-2">
+                        <button onClick={handleSaveEdit} className="flex-1 bg-green-100 text-green-700 py-2 rounded text-sm font-bold">Gravar</button>
+                        <button onClick={handleCancelEdit} className="flex-1 bg-red-100 text-red-700 py-2 rounded text-sm font-bold">Cancelar</button>
                     </div>
-                 </div>
+                </div>
              ) : (
-                 <>
-                    <div className="pr-16">
-                        <span className="inline-block bg-gray-100 px-2 py-1 rounded text-xs font-semibold text-gray-600 mb-1">{item.category}</span>
-                        <p className="text-gray-900 font-medium">{item.label}</p>
-                        {item.description && <p className="text-gray-500 text-xs mt-1 italic">{item.description}</p>}
+                <>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <span className="text-xs font-bold uppercase text-gray-400">{item.category}</span>
+                            <p className="font-bold text-gray-800">{item.label}</p>
+                            {item.description && <p className="text-xs text-gray-500 italic mt-1">{item.description}</p>}
+                        </div>
+                        <div className="flex">
+                            <button onClick={() => handleStartEdit(item)} className="p-2 text-indigo-600"><Edit2 className="w-5 h-5"/></button>
+                            <button onClick={() => handleDelete(item.id)} className="p-2 text-red-600"><Trash2 className="w-5 h-5"/></button>
+                        </div>
                     </div>
-                    <div className="absolute top-4 right-4 flex gap-2">
-                         <button onClick={() => handleStartEdit(item)} className="text-blue-600 p-2 bg-blue-50 rounded-full"><Edit2 className="w-4 h-4" /></button>
-                         <button onClick={() => handleDelete(item.id)} className="text-red-600 p-2 bg-red-50 rounded-full"><Trash2 className="w-4 h-4" /></button>
-                    </div>
-                 </>
+                </>
              )}
-          </div>
+           </div>
         ))}
       </div>
     </div>
